@@ -16,5 +16,6 @@ Coppeliasim code of videos(from Bilibili)
 ## 关于其他py文件
 * IK_robotarm.py和main.py为B站视频配套相关代码，均在视频中出现过
 ## 关于配置文件，最好根据自己的Coppeliasim版本自行替换（本项目中所使用为4.7.0版本）
-* depth_image_encoding.py,sim.py,simConst.py,remoteApi.so/remoteApi.dll为python进行远程连接仿真环境的配置文件，在CoppeliaSim_V4_7_0/programming/legacyRemoteApi/remoteApiBindings/python中可以找到，复制到项目**根目录**下即可
+* depth_image_encoding.py,sim.py,simConst.py为python进行远程连接仿真环境的配置文件，在CoppeliaSim_V4_7_0/programming/legacyRemoteApi/remoteApiBindings/python中可以找到，复制到项目**根目录**下即可
+* remoteApi.so/remoteApi.dll为远程连接的动态链接库，**.so**在ubuntu系统下使用，**.dll**在windows系统下使用，其位置在CoppeliaSim_V4_7_0/programming/legacyRemoteApi/remoteApiBindings/lib/lib/Ubuntu以及～/Windows下找到，复制到项目**根目录**即可
 * coppeliasim_zmqremoteapi_client文件为运行手眼标定的配置文件，在CoppeliaSim_V4_7_0/programming/zmqRemoteApi/clients/python/src中可以找到，同样复制文件夹到项目**根目录**即可
