@@ -6,7 +6,7 @@ Coppeliasim code of videos(from Bilibili)
 * 2.Ubuntu 22.04 ：4.7.0
 * 3.python 3.11.0
 ## 手眼标定项目
-### 在此感谢大佬hong3731 这是[她的主页](https://blog.csdn.net/hong3731)
+### 在此感谢大佬[hong3731](https://blog.csdn.net/hong3731)
 * 1.场景基于UR5机械臂、深度相机和棋盘标定板搭建，存放于**scene**中的UR5_eyeinhand.ttt
 * 2.标定版checkerboard.jpg、关节角度信息和末端姿态信息csv文件存放于**data**中
 * 3.关于[标定板生成网站](https://calib.io/pages/camera-calibration-pattern-generator)
