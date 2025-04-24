@@ -11,6 +11,7 @@ import math
 import struct
 import time
 import matplotlib
+from utils import *
 
 matplotlib.use('TkAgg')
 
@@ -25,7 +26,7 @@ def init_param():
     chessboard_size = (10, 7)
 
     # 标定板的真实物理尺寸
-    square_size = 0.03  # 每个格子的边长是15毫米
+    square_size = 0.03  # 我场景中的标定版每个格子的边长是30毫米
     objp = np.zeros((chessboard_size[0] * chessboard_size[1], 3), np.float32)
     objp[:, :2] = np.mgrid[0:chessboard_size[0],
                   0:chessboard_size[1]].T.reshape(-1, 2) * square_size
@@ -40,51 +41,9 @@ def init_param():
     camera_poses_R = []  # 10 个相机的旋转矩阵
     camera_poses_t = []  # 10 个相机的平移向量
 
-    targetjoinPos1 = [90 * math.pi / 180, -20 * math.pi / 180, 45 *
-                      math.pi / 180, -25 * math.pi / 180, 0 * math.pi / 180, 0 * math.pi / 180]
+    targetjoinPos1, targetPos = get_csvInfo()
 
-    # Pose is relative to world
-    targetPos = []
-
-    targetPos1 = [0.757, -0.567, 0.757,
-                  -0.469, -0.428, -0.522, -0.571]
-    targetPos2 = [0.76, -0.539, 0.757,
-                  0.63, -0.079, 0.77, 0.053]
-    targetPos3 = [0.774, -0.587, 0.641,
-                  -0.541, -0.249, -0.744, -0.305]
-    targetPos4 = [0.708, -0.715, 0.678,
-                  -0.524, -0.482, -0.483, -0.512]
-    targetPos5 = [0.447, -0.519, 0.636,
-                  -0.427, -0.498, -0.582, -0.482]
-    targetPos6 = [0.595, -0.46, 0.854,
-                  -0.348, -0.445, -0.649, -0.511]
-    targetPos7 = [0.45, -0.492, 0.637,
-                  -0.393, -0.498, -0.603, -0.486]
-    # targetPos8 = [0.575, -0.34, 0.571,
-    #               0.128, -0.657, -0.3, -0.68]
-    # targetPos9 = [0.552, -0.438, 0.838,
-    #               -0.366, -0.429, -0.651, -0.51]
-    # targetPos10 = [0.64, -0.571, 0.827,
-    #                -0.482, -0.372, -0.584, -0.539]
-    targetPos8 = [0.714, -0.46, 0.857,
-                  -0.088, -0.525, -0.585, -0.613]
-    targetPos9 = [0.754, -0.415, 0.851,
-                  0.012, -0.572, -0.373, -0.732]
-    targetPos10 = [0.618, -0.516, 0.591,
-                   -0.646, -0.438, -0.483, -0.399]
-
-    targetPos.append(targetPos1)
-    targetPos.append(targetPos2)
-    targetPos.append(targetPos3)
-    targetPos.append(targetPos4)
-    targetPos.append(targetPos5)
-    targetPos.append(targetPos6)
-    targetPos.append(targetPos7)
-    targetPos.append(targetPos8)
-    targetPos.append(targetPos9)
-    targetPos.append(targetPos10)
-
-    return chessboard_size, objpoints, imgpoints, robot_poses_R, robot_poses_t, camera_poses_R, camera_poses_t, objp, targetjoinPos1, targetPos
+    return [chessboard_size, objpoints, imgpoints, robot_poses_R, robot_poses_t, camera_poses_R, camera_poses_t, objp, targetjoinPos1, targetPos]
 
 
 def init_handle():
@@ -109,7 +68,7 @@ def init_handle():
         #     upper_limit_deg = math.degrees(interval[0] + interval[1])  # 最大角度值
         #     print(f"关节 {joint_handle} 的运动范围是：{lower_limit_deg:.2f}° 到 {upper_limit_deg:.2f}°")
 
-    return targetHandle, tipHandle, robotHandle, visionSensorHandle, deepSensorHandle, chessboardHandle, jointHandles
+    return [targetHandle, tipHandle, robotHandle, visionSensorHandle, deepSensorHandle, chessboardHandle, jointHandles]
 
 
 def init_VAJ():
@@ -128,7 +87,7 @@ def init_VAJ():
     maxAccel = [accel for _ in range(4)]
     maxJerk = [jerk for _ in range(4)]
 
-    return jmaxVel, jmaxAccel, jmaxJerk, maxVel, maxAccel, maxJerk
+    return [jmaxVel, jmaxAccel, jmaxJerk, maxVel, maxAccel, maxJerk]
 
 
 def moveToConfig(handles, maxVel, maxAccel, maxJerk, targetConf):
@@ -337,27 +296,6 @@ def pointsinchessboard_3D(objpoints, rvecs, tvecs):
     plt.show()
 
 
-def buildMatrix(R_board_to_world, t_board_to_world):
-    # 正常np数组可以传入
-    # cal_chessboard_matrix = np.array(
-    #     [R_board_to_world[0][0], R_board_to_world[0][1], R_board_to_world[0][2], t_board_to_world[0],
-    #      R_board_to_world[1][0], R_board_to_world[1][1], R_board_to_world[1][2], t_board_to_world[1],
-    #      R_board_to_world[2][0], R_board_to_world[2][1], R_board_to_world[2][2], t_board_to_world[2]])
-
-    # np数组解析失败时，可以传入coppe进行控制，但旋转矩阵转为旋转向量数值可能和欧拉角对不上，导致结果不对
-    # list_r, _ = cv2.Rodrigues(R_board_to_world)
-    # list_r = [list_r[0][0], list_r[1][0], list_r[2][0]]
-    # list_t = [t_board_to_world[0], t_board_to_world[1], t_board_to_world[2]]
-    # cal_chessboard_matrix = sim.buildMatrix(list_t, list_r)
-
-    # np数值解析失败时，最稳妥的方式，使用list传入，包不会错的
-    cal_chessboard_matrix = \
-        [R_board_to_world[0][0], R_board_to_world[0][1], R_board_to_world[0][2], t_board_to_world[0],
-         R_board_to_world[1][0], R_board_to_world[1][1], R_board_to_world[1][2], t_board_to_world[1],
-         R_board_to_world[2][0], R_board_to_world[2][1], R_board_to_world[2][2], t_board_to_world[2]]
-    return cal_chessboard_matrix
-
-
 class ImageStreamDisplay:
     def __init__(self, resolution):
         # 创建一个包含两个子图的图形
@@ -391,15 +329,13 @@ class ImageStreamDisplay:
         plt.pause(0.01)  # 暂停一小段时间以允许GUI更新
 
 
-def main():
-    chessboard_size, objpoints, imgpoints, robot_poses_R, robot_poses_t, camera_poses_R, camera_poses_t, objp, targetjoinPos1, targetPos = init_param()
-    targetHandle, tipHandle, robotHandle, visionSensorHandle, deepSensorHandle, chessboardHandle, jointHandles = init_handle()
-    jmaxVel, jmaxAccel, jmaxJerk, maxVel, maxAccel, maxJerk = init_VAJ()
-
-    sim.startSimulation()
-    # 实例化显示图像
-    display = ImageStreamDisplay([640, 480])
-
+def stage1(list_param, list_handle, list_vaj, display):
+    """
+    Get camera intrinsics with 10 images from Vision sensor(kinect in scene)
+    """
+    chessboard_size, objpoints, imgpoints, robot_poses_R, robot_poses_t, camera_poses_R, camera_poses_t, objp, targetjoinPos1, targetPos = list_param
+    targetHandle, tipHandle, robotHandle, visionSensorHandle, deepSensorHandle, chessboardHandle, jointHandles = list_handle
+    jmaxVel, jmaxAccel, jmaxJerk, maxVel, maxAccel, maxJerk = list_vaj
     print('------Perform camera calibration------')
     # init pose
     moveToConfig(jointHandles, jmaxVel, jmaxAccel, jmaxJerk, targetjoinPos1)
@@ -437,6 +373,16 @@ def main():
 
     # pointsinchessboard_3D(objpoints, rvecs, tvecs)
 
+    return mtx, dist
+
+
+def stage2(mtx, dist, list_param, list_handle, list_vaj, display):
+    """
+    Get transform metrix（R & T） from camera to Tip
+    """
+    chessboard_size, objpoints, imgpoints, robot_poses_R, robot_poses_t, camera_poses_R, camera_poses_t, objp, targetjoinPos1, targetPos = list_param
+    targetHandle, tipHandle, robotHandle, visionSensorHandle, deepSensorHandle, chessboardHandle, jointHandles = list_handle
+    jmaxVel, jmaxAccel, jmaxJerk, maxVel, maxAccel, maxJerk = list_vaj
     print('------Perform hand-eye calibration------')
     # init pose
     moveToConfig(jointHandles, jmaxVel, jmaxAccel, jmaxJerk, targetjoinPos1)
@@ -496,9 +442,17 @@ def main():
     # print("手眼标定结果已保存到 hand_eye_calibration.npz")
     print("手眼标定完成")
 
-    print('------Test hand-eye calibration------')
-    # 测试标定的结果：
+    return R_cam2gripper, t_cam2gripper
 
+
+def stage3(mtx, dist, R_cam2gripper, t_cam2gripper, list_param, list_handle, list_vaj, display):
+    """
+    Test camera model
+    """
+    chessboard_size, objpoints, imgpoints, robot_poses_R, robot_poses_t, camera_poses_R, camera_poses_t, objp, targetjoinPos1, targetPos = list_param
+    targetHandle, tipHandle, robotHandle, visionSensorHandle, deepSensorHandle, chessboardHandle, jointHandles = list_handle
+    jmaxVel, jmaxAccel, jmaxJerk, maxVel, maxAccel, maxJerk = list_vaj
+    print('------Test hand-eye calibration------')
     # 初始拍照位置
     moveToConfig(jointHandles, jmaxVel, jmaxAccel, jmaxJerk, targetjoinPos1)
 
@@ -573,6 +527,33 @@ def main():
             moveToPose(goalTr, tipHandle, targetHandle, maxVel, maxAccel, maxJerk)
 
         display.displayUpdated(img, depth_image)
+
+
+def main():
+    """
+    model_is_available默认为False，需要从头采集数据标定相机参数等
+    model_is_available为True，已有标定参数，保存在data/cmodel.npz
+    """
+    model_is_available = True
+    list_param = init_param()
+    list_handle = init_handle()
+    list_vaj = init_VAJ()
+    # chessboard_size, objpoints, imgpoints, robot_poses_R, robot_poses_t, camera_poses_R, camera_poses_t, objp, targetjoinPos1, targetPos = init_param()
+    # targetHandle, tipHandle, robotHandle, visionSensorHandle, deepSensorHandle, chessboardHandle, jointHandles = init_handle()
+    # jmaxVel, jmaxAccel, jmaxJerk, maxVel, maxAccel, maxJerk = init_VAJ()
+    # 实例化显示图像
+    display = ImageStreamDisplay([640, 480])
+
+    sim.startSimulation()
+
+    if not model_is_available:
+        mtx, dist = stage1(list_param, list_handle, list_vaj, display)
+        R_cam2gripper, t_cam2gripper = stage2(mtx, dist, list_param, list_handle, list_vaj, display)
+        # save_np(mtx, dist, R_cam2gripper, t_cam2gripper)
+    else:
+        mtx, dist, R_cam2gripper, t_cam2gripper = load_cmodel()
+
+    stage3(mtx, dist, R_cam2gripper, t_cam2gripper, list_param, list_handle, list_vaj, display)
 
     sim.stopSimulation()
 
