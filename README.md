@@ -15,3 +15,6 @@ Coppeliasim code of videos(from Bilibili)
 * 6.在运行calibrate_hand_eye.py时，请**关闭上述Script的enabled使能属性**，防止保存的关节和姿态数据被清空
 ## 关于其他py文件
 * IK_robotarm.py和main.py为B站视频配套相关代码，均在视频中出现过
+## 关于配置文件，最好根据自己的Coppeliasim版本自行替换（本项目中所使用为4.7.0版本）
+* depth_image_encoding.py,sim.py,simConst.py,remoteApi.so/remoteApi.dll为python进行远程连接仿真环境的配置文件，在CoppeliaSim_V4_7_0/programming/legacyRemoteApi/remoteApiBindings/python中可以找到，复制到项目**根目录**下即可
+* coppeliasim_zmqremoteapi_client文件为运行手眼标定的配置文件，在CoppeliaSim_V4_7_0/programming/zmqRemoteApi/clients/python/src中可以找到，同样复制文件夹到项目**根目录**即可
