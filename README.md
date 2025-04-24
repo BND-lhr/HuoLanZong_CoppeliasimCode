@@ -11,3 +11,5 @@ Coppeliasim code of videos(from Bilibili)
 * 2.标定版checkerboard.jpg、关节角度信息和末端姿态信息csv文件存放于**data**中
 * 3.关于[标定板生成网站](https://calib.io/pages/camera-calibration-pattern-generator)
 * 4.**hong3731**的[手眼标定代码](https://github.com/hong3731/Handeyecalibration)
+* 5.在UR5_eyeinhand.ttt中进行关节和姿态的数据制作和保存时，请**打开(勾选)UR5下的Script的enabled使能属性**，在coppeliasim中开启仿真时，出现UI界面说明自定义脚本**正常运作**
+* 6.在运行calibrate_hand_eye.py时，请**关闭上述Script的enabled使能属性**，防止保存的关节和姿态数据被清空
