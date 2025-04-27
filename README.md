@@ -6,13 +6,12 @@ Coppeliasim code of videos(from Bilibili)
 * 2.Ubuntu 22.04 ：4.7.0
 * 3.python 3.11.0
 ## 手眼标定项目
-### 在此感谢大佬[hong3731](https://blog.csdn.net/hong3731)
+### 在此感谢大佬[hong3731](https://blog.csdn.net/hong3731)，这是她的[手眼标定代码](https://github.com/hong3731/Handeyecalibration)
 * 1.场景基于UR5机械臂、深度相机和棋盘标定板搭建，存放于**scene**中的UR5_eyeinhand.ttt
 * 2.标定版checkerboard.jpg、关节角度信息和末端姿态信息csv文件存放于**data**中
-* 3.关于[标定板生成网站](https://calib.io/pages/camera-calibration-pattern-generator)
-* 4.**hong3731**的[手眼标定代码](https://github.com/hong3731/Handeyecalibration)
-* 5.在UR5_eyeinhand.ttt中进行关节和姿态的数据制作和保存时，请**打开(勾选)UR5下的Script的enabled使能属性**，在coppeliasim中开启仿真时，出现UI界面说明自定义脚本**正常运作**
-* 6.在运行calibrate_hand_eye.py时，请**关闭上述Script的enabled使能属性**，防止保存的关节和姿态数据被清空
+* 3.标定版图片可以在[标定板生成网站](https://calib.io/pages/camera-calibration-pattern-generator)生成并保存
+* 4.在UR5_eyeinhand.ttt中进行关节和姿态的数据制作和保存时，请**打开(勾选)UR5下的Script的enabled使能属性**，在coppeliasim中开启仿真时，出现UI界面说明自定义脚本**正常运作**
+* 5.在运行calibrate_hand_eye.py时，请**关闭上述Script的enabled使能属性**，防止保存的关节和姿态数据被清空
 ## 关于其他py文件
 * IK_robotarm.py和main.py为B站视频配套相关代码，均在视频中出现过
 ## 关于配置文件，最好根据自己的Coppeliasim版本自行替换（本项目中所使用为4.7.0版本）
