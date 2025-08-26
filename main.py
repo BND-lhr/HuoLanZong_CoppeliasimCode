@@ -156,7 +156,7 @@ def get_vs_img(clientId, visionsensor_name, mode=1):
     elif mode == 1:
         _, vs = sim.simxGetObjectHandle(clientId, visionsensor_name, sim.simx_opmode_blocking)
         _, resolution, raw_img = sim.simxGetVisionSensorImage(clientId, vs, 0, sim.simx_opmode_buffer)
-        img = encode_visionsensorImage(raw_img, resolution)
+        img = encode_vs_img(raw_img, resolution)
         # print('ret = {}'.format(ret))
         # print("resolution = {}".format(resolution))
         # plt.subplot(111)
