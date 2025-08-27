@@ -9,7 +9,7 @@ from utils import *
 IP = '127.0.0.1'
 # 19997特殊端口，实验下来无需在coppeliasim手动启动场景，只运行python就能启动，且不需要和scene脚本中Api.start端口相同，甚至scene中不写都行
 # 而其他端口则需要先手动运行仿真，且端口要一致，才能连接上
-PORT = 19997
+PORT = 19995
 
 
 def IK_robot_arm(clientId, handle_name, target_info, move_per_distance=0.001, relative_handle=-1):
@@ -156,7 +156,7 @@ def get_vs_img(clientId, visionsensor_name, mode=1):
     elif mode == 1:
         _, vs = sim.simxGetObjectHandle(clientId, visionsensor_name, sim.simx_opmode_blocking)
         _, resolution, raw_img = sim.simxGetVisionSensorImage(clientId, vs, 0, sim.simx_opmode_buffer)
-        img = encode_vs_img(raw_img, resolution)
+        img = encode_vs_img(resolution, raw_img)
         # print('ret = {}'.format(ret))
         # print("resolution = {}".format(resolution))
         # plt.subplot(111)
@@ -171,7 +171,7 @@ def main():
     sim.simxFinish(-1)
     clientId = sim.simxStart(IP, PORT, True, True, 3000, 5)
     if clientId != -1:
-        print("Cpnnected to remote API sever successfully!")
+        print("Connected to remote API sever successfully!")
         sim.simxStartSimulation(clientId, sim.simx_opmode_blocking)
         print("Simulation Start!")
 

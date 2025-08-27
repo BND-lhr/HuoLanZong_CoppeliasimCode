@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 from utils import *
 
 IP = '127.0.0.1'
-PORT = 19997
+PORT = 19995
 
 
 def IK_robot_arm(clientId, handle_name, target_info, move_per_distance=0.005, relative_handle=-1):
@@ -96,7 +96,7 @@ def get_vs_img(cid, visionsensor_name, mode=1):
     elif mode == 1:
         _, vs_handle = sim.simxGetObjectHandle(cid, visionsensor_name, sim.simx_opmode_blocking)
         _, resolution, raw_img = sim.simxGetVisionSensorImage(cid, vs_handle, 0, sim.simx_opmode_buffer)
-        img = encode_visionsensorImage(raw_img, resolution)
+        img = encode_vs_img(resolution, raw_img)
         return img
     else:
         print("Other mode aren't available!")
@@ -107,7 +107,7 @@ def main():
     cid = sim.simxStart(IP, PORT, True, True, 3000, 5)
     if cid != -1:
         # strat simulation
-        print("Cpnnected to remote API sever successfully!")
+        print("Connected to remote API sever successfully!")
         sim.simxStartSimulation(cid, sim.simx_opmode_blocking)
         print("Simulation Start!")
 
