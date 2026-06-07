@@ -1,8 +1,13 @@
 import numpy as np
 import csv
 import math
-import sim
 import cv2
+from PIL import Image
+from torchvision import transforms
+
+transform = transforms.Compose([
+    transforms.ToTensor(),
+])
 
 def encode_vs_img(resolution, raw_img):
     img = np.array(raw_img, dtype=np.uint8)
@@ -10,6 +15,24 @@ def encode_vs_img(resolution, raw_img):
     img = cv2.flip(img, 0)
     # print(img.shape)
     return img
+
+def rgb2hsv(img):
+    hsv = cv2.cvtColor(img, cv2.COLOR_RGB2HSV)
+    return hsv
+
+def raw_img_pre_process(img, size=(512, 512)):
+    max_ = max(img.shape)
+    temp = np.zeros(shape=(max_, max_, 3), dtype=np.uint8)
+    temp[:img.shape[0], :img.shape[1], :] = img
+    pre_img = cv2.resize(temp.copy(), size)
+    return pre_img
+
+def pred_img_post_process(img, size=(640, 480)):
+    a = size[1] / size[0]
+    temp = np.array(img[:int(img.shape[0] * a), :, :], dtype=np.uint8)
+    pro_img = cv2.resize(temp.copy(), size)
+    return pro_img
+
 
 def get_csvInfo():
     jointPath = r'./data/JointDegreeInfo.csv'
@@ -95,15 +118,15 @@ def load_cmodel(path=r'./data/cmodel.npz'):
 
 def buildMatrix(R_board_to_world, t_board_to_world):
     # ubuntu下，正常np数组可以传入
-    cal_chessboard_matrix = np.array(
-        [R_board_to_world[0][0], R_board_to_world[0][1], R_board_to_world[0][2], t_board_to_world[0],
-         R_board_to_world[1][0], R_board_to_world[1][1], R_board_to_world[1][2], t_board_to_world[1],
-         R_board_to_world[2][0], R_board_to_world[2][1], R_board_to_world[2][2], t_board_to_world[2]])
+    # cal_chessboard_matrix = np.array(
+    #     [R_board_to_world[0][0], R_board_to_world[0][1], R_board_to_world[0][2], t_board_to_world[0],
+    #      R_board_to_world[1][0], R_board_to_world[1][1], R_board_to_world[1][2], t_board_to_world[1],
+    #      R_board_to_world[2][0], R_board_to_world[2][1], R_board_to_world[2][2], t_board_to_world[2]])
 
 
     # windows下，可能会遇到np数值解析失败时，最稳妥的方式，使用list传入，包不会错的
-    # cal_chessboard_matrix = \
-    #     [R_board_to_world[0][0], R_board_to_world[0][1], R_board_to_world[0][2], t_board_to_world[0],
-    #      R_board_to_world[1][0], R_board_to_world[1][1], R_board_to_world[1][2], t_board_to_world[1],
-    #      R_board_to_world[2][0], R_board_to_world[2][1], R_board_to_world[2][2], t_board_to_world[2]]
+    cal_chessboard_matrix = \
+        [R_board_to_world[0][0], R_board_to_world[0][1], R_board_to_world[0][2], t_board_to_world[0],
+         R_board_to_world[1][0], R_board_to_world[1][1], R_board_to_world[1][2], t_board_to_world[1],
+         R_board_to_world[2][0], R_board_to_world[2][1], R_board_to_world[2][2], t_board_to_world[2]]
     return cal_chessboard_matrix
