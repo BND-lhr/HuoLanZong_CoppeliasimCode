@@ -2,9 +2,9 @@
 Coppeliasim code of videos(from Bilibili)
 与B站视频内容相关的代码，会陆续上传
 ## 所使用的Coppeliasim（V-rep）版本如下：
-* 1.windows ：4.6.0 / 4.7.0（由于4.7.0的一些API更新，目前已更新为4.7.0版本）
-* 2.Ubuntu 22.04 ：4.7.0
-* 3.python 3.11.0
+* 1.windows ：4.6.0 / 4.7.0(基础篇IK_robotArm_pythonApi中使用)
+* 2.Ubuntu 22.04 ：4.9.0(进阶篇使用ZMQ，请熟悉CoppeliaSim及Python语法后享用)
+* 3.python 3.11.0+
 ## 手眼标定项目
 ### 手动设计机械臂位姿，以采集标定板数据用于后续标定
 https://github.com/user-attachments/assets/65124cf4-8029-4f67-9952-a5bc790212f4
@@ -14,9 +14,12 @@ https://github.com/user-attachments/assets/65124cf4-8029-4f67-9952-a5bc790212f4
 * 3.标定版图片可以在[标定板生成网站](https://calib.io/pages/camera-calibration-pattern-generator)生成并保存
 * 4.在UR5_eyeinhand.ttt中进行关节和姿态的数据制作和保存时，请**打开(勾选)**UR5下的Script的enabled使能属性，在coppeliasim中开启仿真时，出现UI界面说明自定义脚本**正常运作**
 * 5.在运行calibrate_hand_eye.py时，请**关闭**上述Script的enabled使能属性，防止保存的关节和姿态数据被清空
-## 关于其他py文件
-* IK_robotarm.py和main.py为B站视频配套相关代码，均在视频中出现过
-## 关于配置文件，最好根据自己的Coppeliasim版本自行替换（本项目中所使用为4.7.0版本）
+## 关于文件夹
+* 文件夹IK_robotArm_pythonApi为视频基础篇，建议新手使用
+* 文件夹coppeliasim_zmqremoteapi_client为zmq连接Coppe场景所需源代码，由Coppe软件提供
+* 文件夹data存放样例数据、模型文件、标定板图像及其他相关数据
+* 文件夹scene存放Coppe场景文件和相关Object脚本的Lua代码
+## 关于配置文件，根据自己所使用的Coppeliasim版本自行替换
 * depth_image_encoding.py,sim.py,simConst.py为python进行远程连接仿真环境的配置文件，在CoppeliaSim_V4_7_0/programming/legacyRemoteApi/remoteApiBindings/python中可以找到，复制到项目**根目录**下即可
 * remoteApi.so/remoteApi.dll为远程连接的动态链接库，**.so**在ubuntu系统下使用，**.dll**在windows系统下使用，其位置在CoppeliaSim_V4_7_0/programming/legacyRemoteApi/remoteApiBindings/lib/lib/Ubuntu以及～/Windows下找到，复制到项目**根目录**即可
 * coppeliasim_zmqremoteapi_client文件为运行手眼标定的配置文件，在CoppeliaSim_V4_7_0/programming/zmqRemoteApi/clients/python/src中可以找到，同样复制文件夹到项目**根目录**即可
