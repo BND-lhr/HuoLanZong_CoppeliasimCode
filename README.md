@@ -1,5 +1,5 @@
-# HuoLanZong_CoppeliasimCode（Lua/Python in Coppeliasim and Python Remote）B站ID：[火兰宗_烂好人](https://space.bilibili.com/253086292?spm_id_from=333.1007.0.0)
-Coppeliasim code of videos(from Bilibili)
+# HuoLanZong_CoppeliasimCode B站ID：[火兰宗_烂好人](https://space.bilibili.com/253086292?spm_id_from=333.1007.0.0)
+（Lua/Python in Coppeliasim）
 与B站视频内容相关的代码，会陆续上传
 ## 所使用的Coppeliasim（V-rep）版本如下：
 * 1.windows ：4.6.0 / 4.7.0(基础篇IK_robotArm_pythonApi中使用)
